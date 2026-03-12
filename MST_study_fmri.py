@@ -30,10 +30,10 @@ exp = data.ExperimentHandler(
 
 # --- Load condition files ---
 # Main experiment stimuli (e.g. Sets 1 and 2)
-cond_df = pd.read_excel("MST_stimuli_final.xlsx")
+cond_df = pd.read_excel("MST_stimuli_lurebins2345.xlsx")
 
 # Filter only old_1 and old_2 for the main study loop
-study_df = cond_df[cond_df["cond"].isin(["old_1", "old_2"])].sample(n=20) # Set to 20 or so for piloting with coworkers? Delete for actual testing
+study_df = cond_df[cond_df["cond"].isin(["old_1", "old_2"])]
 
 # TrialHandler for main experiment (created once) 
 study_trials = data.TrialHandler(
@@ -56,6 +56,14 @@ wait_for_scanner_txt = TextStim(
     color="black",
     height=0.05
 )
+# "Thank you for playing" screen
+exit_screen = TextStim(
+    win,
+    text='Tack för din medverkan',
+    font='Calibri',
+    color="black",
+    height=0.05
+)
 
 # Judgment question text (static)
 judge_txt = "Inomhus eller utomhus?"
@@ -66,7 +74,8 @@ stim_txt = TextStim(win, text=judge_txt, pos=(
 fix_target = TextStim(win, text='+', height=0.07, color='black')
 
 # Image stimulus (we only change image each trial)
-stim_img = ImageStim(win, image=None)
+stim_img = ImageStim(win, image=None, units='height')
+stim_img.size = (None, 0.5) # None preserves aspect ratio, 0.5 is percentage of screen, height wise
 
 # --- Timings ---
 t_fix_options = [0.5, 1.0, 1.5]  # fixation cross duration options (ISI jitter)
@@ -136,7 +145,7 @@ for trial in study_trials:
 
             win.flip()
 
-            # Collect response *only* during stimulus period
+            # Collect response *only* during stimulus period - Do we want this?
             if t >= t_fix and t < t_fix + stim_dur and resp_key is None:
                 keys = kb.getKeys(keyList=['1', '2', 'escape'], # Set keys according to fMRI needs?
                                   waitRelease=False,
@@ -159,5 +168,10 @@ for trial in study_trials:
         exp.nextEntry()
         
 # Data is saved automatically when the ExperimentHandler closes
+
+exit_screen.draw()
+win.flip()
+kb.waitKeys()
+
 win.close()
 quit()

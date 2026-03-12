@@ -55,7 +55,7 @@ instructions_txt_stim = TextStim(
     
     Vänster: Inomhus
     
-    Höger:Utomhus
+    Höger: Utomhus
 """,
     font='Calibri',
     color= "black",
@@ -80,7 +80,8 @@ stim_txt = TextStim(win, text=judge_txt, pos=(
 fix_target = TextStim(win, text='+', height=0.07, color='black')
 
 # Image stimulus (we only change image each trial)
-stim_img = ImageStim(win, image=None)
+stim_img = ImageStim(win, image=None, units='height')
+stim_img.size = (None, 0.5) # precentage of screen height, None preserves aspect ratio
 
 # --- Timings ---
 t_fix_options = [0.5, 1.0, 1.5]  # fixation cross duration options (ISI jitter)
